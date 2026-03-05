@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tauri-tanstack-start-react-template",
+  "productName": "auto-thought",
   "version": "0.1.0",
-  "identifier": "com.tauri.deva",
+  "identifier": "com.tauri.autothought",
   "build": {
     "beforeDevCommand": "npm run dev:vite",
     "devUrl": "http://localhost:3000",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "tauri-tanstack-start-react-template",
+        "title": "auto-thought",
         "width": 800,
         "height": 600
       }
@@ -30,6 +30,12 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "resources": ["migrations/*"]
+  },
+  "plugins": {
+    "sql": {
+      "preload": ["sqlite:database.db"]
+    }
   }
 }

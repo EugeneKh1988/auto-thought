@@ -1,11 +1,19 @@
 import {
-  createRootRoute,
+  createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import TanStackQueryDevtools from '../integrations/tanstack-query/devtools';
 
 import appCss from "../styles.css?url";
+import { QueryClient } from "@tanstack/react-query";
+
+interface MyRouterContext {
+  queryClient: QueryClient
+}
 
 export const RootComponent: React.FC = () => {
   return (
@@ -15,13 +23,25 @@ export const RootComponent: React.FC = () => {
       </head>
       <body className="antialiased">
         <Outlet />
+        <TanStackDevtools
+          config={{
+            position: 'bottom-right',
+          }}
+          plugins={[
+            {
+              name: 'Tanstack Router',
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+            TanStackQueryDevtools,
+          ]}
+        />
         <Scripts />
       </body>
     </html>
   );
 };
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
     meta: [
       {
