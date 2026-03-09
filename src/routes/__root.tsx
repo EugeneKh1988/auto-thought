@@ -11,6 +11,7 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools';
 import appCss from "../styles.css?url";
 import { QueryClient } from "@tanstack/react-query";
 import Nav from "@/components/Nav";
+import { Toaster } from "@/components/ui/sonner";
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -25,6 +26,7 @@ export const RootComponent: React.FC = () => {
       <body className="antialiased">
         <Nav />
         <Outlet />
+        <Toaster />
         <TanStackDevtools
           config={{
             position: 'bottom-right',
