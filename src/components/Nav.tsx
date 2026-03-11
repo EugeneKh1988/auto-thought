@@ -1,6 +1,6 @@
 import { Link, linkOptions } from "@tanstack/react-router";
 import Container from "./Container";
-import { BookA, Home, LogIn, SquareArrowRightExit } from "lucide-react";
+import { Home, LogIn, SquareArrowRightExit } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Button } from "./ui/button";
 
@@ -13,10 +13,10 @@ const links = linkOptions([
     to: "/",
     icon: Home,
   },
-  {
+  /* {
     to: "/negative",
     icon: BookA,
-  },
+  }, */
 ]);
 
 const Nav: React.FC<NavProps> = ({className, }) => {
@@ -49,13 +49,20 @@ const Nav: React.FC<NavProps> = ({className, }) => {
         </div>
         <div>
           {data?.user && data?.user.id ? (
-            <Button variant="ghost" onClick={() => signOut()} className="cursor-pointer size-8 md:size-12">
-              <SquareArrowRightExit
-                className="size-8 md:size-12"
-              />
+            <Button
+              variant="ghost"
+              onClick={() => signOut()}
+              className="cursor-pointer size-8 md:size-12"
+            >
+              <SquareArrowRightExit className="size-8 md:size-12" />
             </Button>
           ) : (
-            <Link to="/login">
+            <Link
+              to="/login"
+              activeProps={{
+                className: "text-blue-500",
+              }}
+            >
               <LogIn className="size-8 md:size-12" />
             </Link>
           )}

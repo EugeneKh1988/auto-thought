@@ -15,6 +15,13 @@
       "when": 1772715175101,
       "tag": "0001_flowery_blackheart",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1773136290264,
+      "tag": "0002_chief_ser_duncan",
+      "breakpoints": true
     }
   ]
 }
