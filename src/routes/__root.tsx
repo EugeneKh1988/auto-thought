@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { QueryClient } from "@tanstack/react-query";
 import Nav from "@/components/Nav";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -25,15 +26,17 @@ export const RootComponent: React.FC = () => {
       </head>
       <body className="antialiased">
         <Nav />
-        <Outlet />
+        <TooltipProvider>
+          <Outlet />
+        </TooltipProvider>
         <Toaster />
         <TanStackDevtools
           config={{
-            position: 'bottom-right',
+            position: "bottom-right",
           }}
           plugins={[
             {
-              name: 'Tanstack Router',
+              name: "Tanstack Router",
               render: <TanStackRouterDevtoolsPanel />,
             },
             TanStackQueryDevtools,

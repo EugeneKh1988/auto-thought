@@ -3,6 +3,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { situationsOptions } from "@/data/situation_queries";
 import { SearchAlert, Trash } from "lucide-react";
+import AddOrEditSituation from "./AddOrEditSituation";
+import { Button } from "./ui/button";
+import { useSituationStore } from "@/store/situationStore";
+import SituationItem from "./SituationItem";
+import DeleteSituation from "./DeleteSituation";
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "./ui/pagination";
 
 interface SituationsProps {
     className?: string,
@@ -19,6 +25,8 @@ const Situations: React.FC<SituationsProps> = ({ className, }) => {
     const situationsPerPage = 10;
   
     const { data:items, error, isError, isFetching } = useQuery(situationsOptions(page, situationsPerPage, search));
+
+    const setMode = useSituationStore((state) => state.setMode);
   
     const lastPage = useMemo(() => {
       if (items && items.length) {
@@ -26,6 +34,18 @@ const Situations: React.FC<SituationsProps> = ({ className, }) => {
       }
       return 1;
     }, [items]);
+
+    const onNextPage = () => {
+      if (items && items.length && page < lastPage) {
+        setPage((prev) => prev + 1);
+      }
+    };
+
+    const onPrevPage = () => {
+      if (items && items.length && page > 1) {
+        setPage((prev) => prev - 1);
+      }
+    };
 
     // reset page after search changes
     useEffect(() => {
@@ -36,10 +56,47 @@ const Situations: React.FC<SituationsProps> = ({ className, }) => {
 
     return (
       <div className={`pt-1 ${classNameValue}`}>
+        <AddOrEditSituation />
+        <DeleteSituation />
         {items && Array.isArray(items.situations) && !isError ? (
           <>
             {items.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+              <>
+                <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 items-start">
+                  {items.situations.map((item, index) => (
+                    <SituationItem key={index} item={item} />
+                  ))}
+                </div>
+                {/** Pagination */}
+                <Pagination className="mx-0 w-auto mt-2">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        text="Назад"
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onPrevPage();
+                        }}
+                      />
+                    </PaginationItem>
+                    <li className="text-[12px]">{page} из {lastPage}</li>
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        text="Вперед"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onNextPage();
+                        }}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+                <Button onClick={() => setMode("add")} className="mt-2">
+                  Добавить
+                </Button>
+              </>
             )}
             {items &&
               Array.isArray(items.situations) &&
@@ -51,6 +108,7 @@ const Situations: React.FC<SituationsProps> = ({ className, }) => {
                     <p className="text-[14px] md:text-[16px] 3xl:text-[18px] leading-[150%]">
                       Нет данных
                     </p>
+                    <Button onClick={() => setMode("add")}>Добавить</Button>
                   </div>
                 </div>
               )}

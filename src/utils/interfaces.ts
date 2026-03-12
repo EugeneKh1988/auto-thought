@@ -1,5 +1,5 @@
 export interface ISituation {
-  id: string
+  id: number
   name: string
   description?: string
   user_id: string

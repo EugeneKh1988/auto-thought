@@ -73,8 +73,8 @@ const updateSituationSchema = z.object({
   description: z
     .string()
     .optional()
-    .transform((v) => String(v ?? "") || null)
-    .refine((v) =>v && v.length >= 0 && v.length <= 1000, {
+    .transform((v) => String(v ?? ""))
+    .refine((v) => (v.length >= 0 && v.length <= 1000), {
       message: "description length must be between 0 and 1000",
     }),
 });
@@ -180,10 +180,11 @@ export const Route = createFileRoute("/api/situations")({
         }
 
         const { name, description } = result.data;
+        const strDate = new Date().toISOString();
 
         await db
           .insert(situation)
-          .values({ name, description, user_id })
+          .values({ name, description, user_id, created_at: strDate, updated_at: strDate })
           .onConflictDoNothing();
 
         return Response.json({ status: "Ok" });
@@ -227,7 +228,11 @@ export const Route = createFileRoute("/api/situations")({
         // updating
         await db
           .update(situation)
-          .set({...(name !== null ? {name}: {}), ...(description !== null ? {description}: {})})
+          .set({
+            ...(name !== null ? { name } : {}),
+            ...(description !== null ? { description } : {}),
+            updated_at: new Date().toISOString(),
+          })
           .where(and(eq(situation.user_id, user_id), eq(situation.id, id)));
 
         return Response.json({ status: "Ok" });

@@ -107,7 +107,7 @@ export const deleteSituation = async (item: TDeleteSituation) => {
 
 export function situationsOptions(page: number, limit: number, options: ISituationProperties = {}) {
   return queryOptions({
-    queryKey: ['situations', page, options],
+    queryKey: ['situations', page, limit],
     queryFn: () => getSituations({ page, limit }, options),
     placeholderData: keepPreviousData,
   });

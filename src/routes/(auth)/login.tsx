@@ -31,10 +31,10 @@ const formOpts = formOptions({ defaultValues });
 
 function LoginComponent() {
   const [isLoading, setLoading] = useState<boolean>(false);
-  
-    // navigate
-    const navigate = useNavigate({ from: '/login'});
-    
+
+  // navigate
+  const navigate = useNavigate({ from: "/login" });
+
   const form = useForm({
     ...formOpts,
     onSubmit: async ({ value }) => {
