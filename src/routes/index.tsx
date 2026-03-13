@@ -9,7 +9,7 @@ const Home: React.FC = () => {
   return (
     <Container>
       <div className="mt-2.5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <Link to="/negative" className="flex flex-col items-center">
+        <Link to="/situations" className="flex flex-col items-center">
           <BookA size={64} className="mx-auto" />
           <span className="text-center font-medium">
             Работа с автоматическими мыслями

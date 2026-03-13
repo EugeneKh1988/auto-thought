@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { situationsOptions } from "@/data/situation_queries";
 import { SearchAlert, Trash } from "lucide-react";
 import AddOrEditSituation from "./AddOrEditSituation";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { useSituationStore } from "@/store/situationStore";
 import SituationItem from "./SituationItem";
 import DeleteSituation from "./DeleteSituation";
-import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "./ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 interface SituationsProps {
     className?: string,
@@ -18,13 +18,13 @@ interface SituationsProps {
 const Situations: React.FC<SituationsProps> = ({ className, }) => {
   const classNameValue = className ? `${className}` : "";
 
-  const route = getRouteApi('/negative');
+  const route = getRouteApi('/situations');
     const search = route.useSearch();
   
     const [page, setPage] = useState(1);
     const situationsPerPage = 10;
   
-    const { data:items, error, isError, isFetching } = useQuery(situationsOptions(page, situationsPerPage, search));
+    const { data:items, error, isError, /* isFetching */ } = useQuery(situationsOptions(page, situationsPerPage, search));
 
     const setMode = useSituationStore((state) => state.setMode);
   

@@ -9,16 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as NegativeRouteImport } from './routes/negative'
+import { Route as SituationsRouteImport } from './routes/situations'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiSituationsRouteImport } from './routes/api/situations'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const NegativeRoute = NegativeRouteImport.update({
-  id: '/negative',
-  path: '/negative',
+const SituationsRoute = SituationsRouteImport.update({
+  id: '/situations',
+  path: '/situations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,7 +49,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/negative': typeof NegativeRoute
+  '/situations': typeof SituationsRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/api/situations': typeof ApiSituationsRoute
@@ -57,7 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/negative': typeof NegativeRoute
+  '/situations': typeof SituationsRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/api/situations': typeof ApiSituationsRoute
@@ -66,7 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/negative': typeof NegativeRoute
+  '/situations': typeof SituationsRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
   '/api/situations': typeof ApiSituationsRoute
@@ -76,7 +76,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/negative'
+    | '/situations'
     | '/login'
     | '/register'
     | '/api/situations'
@@ -84,7 +84,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/negative'
+    | '/situations'
     | '/login'
     | '/register'
     | '/api/situations'
@@ -92,7 +92,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/negative'
+    | '/situations'
     | '/(auth)/login'
     | '/(auth)/register'
     | '/api/situations'
@@ -101,7 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  NegativeRoute: typeof NegativeRoute
+  SituationsRoute: typeof SituationsRoute
   authLoginRoute: typeof authLoginRoute
   authRegisterRoute: typeof authRegisterRoute
   ApiSituationsRoute: typeof ApiSituationsRoute
@@ -110,11 +110,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/negative': {
-      id: '/negative'
-      path: '/negative'
-      fullPath: '/negative'
-      preLoaderRoute: typeof NegativeRouteImport
+    '/situations': {
+      id: '/situations'
+      path: '/situations'
+      fullPath: '/situations'
+      preLoaderRoute: typeof SituationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -157,7 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  NegativeRoute: NegativeRoute,
+  SituationsRoute: SituationsRoute,
   authLoginRoute: authLoginRoute,
   authRegisterRoute: authRegisterRoute,
   ApiSituationsRoute: ApiSituationsRoute,

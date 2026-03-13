@@ -1,5 +1,5 @@
 import { useSituationStore } from "@/store/situationStore";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog";
+} from "@/components/ui/dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteSituation } from "@/data/situation_queries";
 import { toast } from "sonner";

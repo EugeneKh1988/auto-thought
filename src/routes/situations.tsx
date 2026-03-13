@@ -1,11 +1,11 @@
 import Container from '@/components/Container';
-import Situations from '@/components/Situations';
+import Situations from '@/components/situations/Situations';
 import { authClient } from '@/lib/auth-client';
 import { authMiddleware } from '@/middleware/auth'
 import { ISituationProperties } from '@/utils/interfaces';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/negative")({
+export const Route = createFileRoute("/situations")({
   component: NegativeComponent,
   beforeLoad: async () => {
     const session = await authClient.getSession();
