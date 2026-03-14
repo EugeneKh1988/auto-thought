@@ -1,32 +1,31 @@
-import { ISituation } from "@/utils/interfaces";
+import { IThought } from "@/utils/interfaces";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FilePenLine, NotebookText, Trash2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useSituationStore } from "@/store/situationStore";
-import { Link } from "@tanstack/react-router";
+import { useThoughtStore } from "@/store/thoughtStore";
 
-interface SituationItemProps {
-    item: ISituation,
+interface ThoughtItemProps {
+    item: IThought,
     className?: string,
 }
 
 
-const SituationItem: React.FC<SituationItemProps> = ({ className, item }) => {
+const ThoughtItem: React.FC<ThoughtItemProps> = ({ className, item }) => {
   const classNameValue = className ? `${className}` : "";
 
   // store values
-  const setMode = useSituationStore((state) => state.setMode);
-  const setCurrentSituation = useSituationStore((state) => state.setSituation);
+  const setMode = useThoughtStore((state) => state.setMode);
+  const setCurrentThought = useThoughtStore((state) => state.setThought);
 
   const onEdit = () => {
-    setCurrentSituation(item);
+    setCurrentThought(item);
     // open
     setMode('edit');
   }
 
   const onDelete = () => {
-    setCurrentSituation(item);
+    setCurrentThought(item);
     // open
     setMode('delete');
   }
@@ -44,7 +43,7 @@ const SituationItem: React.FC<SituationItemProps> = ({ className, item }) => {
     <Card className={`sm:max-w-sm ${classNameValue}`}>
       <CardHeader>
         <CardTitle>{item.name}</CardTitle>
-        <CardDescription>{item.description}</CardDescription>
+        <CardDescription>Вера в убеждение: {item.strength}%</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-[12px]">
@@ -57,8 +56,8 @@ const SituationItem: React.FC<SituationItemProps> = ({ className, item }) => {
       <CardFooter className="gap-1.5 flex-wrap lg:flex-nowrap">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon-lg" className="cursor-pointer" asChild>
-              <Link to='/thought/$situation_id' params={{ situation_id: String(item.id)}}><NotebookText /></Link>
+            <Button variant="outline" size="icon-lg" className="cursor-pointer">
+              <NotebookText />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Открыть</TooltipContent>
@@ -84,4 +83,4 @@ const SituationItem: React.FC<SituationItemProps> = ({ className, item }) => {
   );
 };;
 
-export default SituationItem;
+export default ThoughtItem;

@@ -25,8 +25,8 @@ export const RootComponent: React.FC = () => {
         <HeadContent />
       </head>
       <body className="antialiased">
-        <Nav />
         <TooltipProvider>
+          <Nav />
           <Outlet />
         </TooltipProvider>
         <Toaster />

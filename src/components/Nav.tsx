@@ -1,8 +1,9 @@
-import { Link, linkOptions } from "@tanstack/react-router";
+import { Link, linkOptions, useLocation, useRouter, } from "@tanstack/react-router";
 import Container from "./Container";
-import { Home, LogIn, SquareArrowRightExit } from "lucide-react";
+import { Home, LogIn, MoveLeft, SquareArrowRightExit } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Button } from "./ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface NavProps {
     className?: string,
@@ -25,12 +26,31 @@ const Nav: React.FC<NavProps> = ({className, }) => {
   // session
   const { data } = useSession();
 
-  //console.log(data);
+  const router = useRouter();
+  const loc = useLocation();
+
+  //console.log(loc.pathname);
 
   return (
     <div className={`border-b py-1.5 ${classNameValue}`}>
       <Container className="flex justify-between items-center gap-2.5">
-        <div></div>
+        <div>
+          {loc.pathname != "/" ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon-lg"
+                  onClick={() => router.history.back()}
+                  className="cursor-pointer"
+                >
+                  <MoveLeft />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Назад</TooltipContent>
+            </Tooltip>
+          ) : null}
+        </div>
         <div className="flex gap-2.5">
           {links.map((item, index) => {
             const Icon = item.icon;

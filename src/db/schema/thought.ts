@@ -7,7 +7,7 @@ export const thought = sqliteTable("thought", {
     name: text("name").notNull(),
     strength: integer("strength"),
 
-    situation_id: text("situation_id")
+    situation_id: integer("situation_id")
         .notNull()
         .references(() => situation.id, { onDelete: "cascade" }),
 

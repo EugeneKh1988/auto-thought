@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SituationsRouteImport } from './routes/situations'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ThoughtSituation_idRouteImport } from './routes/thought.$situation_id'
+import { Route as ApiThoughtsRouteImport } from './routes/api/thoughts'
 import { Route as ApiSituationsRouteImport } from './routes/api/situations'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
@@ -24,6 +26,16 @@ const SituationsRoute = SituationsRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThoughtSituation_idRoute = ThoughtSituation_idRouteImport.update({
+  id: '/thought/$situation_id',
+  path: '/thought/$situation_id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiThoughtsRoute = ApiThoughtsRouteImport.update({
+  id: '/api/thoughts',
+  path: '/api/thoughts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSituationsRoute = ApiSituationsRouteImport.update({
@@ -53,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/api/situations': typeof ApiSituationsRoute
+  '/api/thoughts': typeof ApiThoughtsRoute
+  '/thought/$situation_id': typeof ThoughtSituation_idRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +75,8 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/api/situations': typeof ApiSituationsRoute
+  '/api/thoughts': typeof ApiThoughtsRoute
+  '/thought/$situation_id': typeof ThoughtSituation_idRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -70,6 +86,8 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
   '/api/situations': typeof ApiSituationsRoute
+  '/api/thoughts': typeof ApiThoughtsRoute
+  '/thought/$situation_id': typeof ThoughtSituation_idRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +98,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/api/situations'
+    | '/api/thoughts'
+    | '/thought/$situation_id'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +108,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/api/situations'
+    | '/api/thoughts'
+    | '/thought/$situation_id'
     | '/api/auth/$'
   id:
     | '__root__'
@@ -96,6 +118,8 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(auth)/register'
     | '/api/situations'
+    | '/api/thoughts'
+    | '/thought/$situation_id'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -105,6 +129,8 @@ export interface RootRouteChildren {
   authLoginRoute: typeof authLoginRoute
   authRegisterRoute: typeof authRegisterRoute
   ApiSituationsRoute: typeof ApiSituationsRoute
+  ApiThoughtsRoute: typeof ApiThoughtsRoute
+  ThoughtSituation_idRoute: typeof ThoughtSituation_idRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -122,6 +148,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/thought/$situation_id': {
+      id: '/thought/$situation_id'
+      path: '/thought/$situation_id'
+      fullPath: '/thought/$situation_id'
+      preLoaderRoute: typeof ThoughtSituation_idRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/thoughts': {
+      id: '/api/thoughts'
+      path: '/api/thoughts'
+      fullPath: '/api/thoughts'
+      preLoaderRoute: typeof ApiThoughtsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/situations': {
@@ -161,6 +201,8 @@ const rootRouteChildren: RootRouteChildren = {
   authLoginRoute: authLoginRoute,
   authRegisterRoute: authRegisterRoute,
   ApiSituationsRoute: ApiSituationsRoute,
+  ApiThoughtsRoute: ApiThoughtsRoute,
+  ThoughtSituation_idRoute: ThoughtSituation_idRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
