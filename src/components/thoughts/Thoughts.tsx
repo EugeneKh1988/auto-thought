@@ -35,6 +35,7 @@ const Thoughts: React.FC<ThoughtsProps> = ({ className }) => {
 
   const setMode = useThoughtStore((state) => state.setMode);
   const setSituationId = useThoughtStore((state) => state.setSituationId);
+  const situationId = useThoughtStore((state) => state.situationId);
 
   const lastPage = useMemo(() => {
     if (items && items.length) {
@@ -62,11 +63,20 @@ const Thoughts: React.FC<ThoughtsProps> = ({ className }) => {
     }
   }, [search]);
 
+  // set situationId from params
+  useEffect(() => {
+    if (situationId != Number(params.situation_id)) {
+      setSituationId(Number(params.situation_id));
+    }
+  }, [params]);
+
   return (
     <div className={`pt-1 ${classNameValue}`}>
       <AddOrEditThought />
       <DeleteThought />
-      <p className='text-[20px] text-center font-medium'>Автоматические мысли о ситуации &#171;{items?.situation.name}&#187;</p>
+      <p className="text-[20px] text-center font-medium">
+        Автоматические мысли о ситуации &#171;{items?.situation.name}&#187;
+      </p>
       {items && Array.isArray(items.thoughts) && !isError ? (
         <>
           {items.length > 0 && (
@@ -106,7 +116,6 @@ const Thoughts: React.FC<ThoughtsProps> = ({ className }) => {
               </Pagination>
               <Button
                 onClick={() => {
-                  setSituationId(items.situation.id);
                   setMode("add");
                 }}
                 className="mt-2 cursor-pointer"
@@ -127,7 +136,6 @@ const Thoughts: React.FC<ThoughtsProps> = ({ className }) => {
                   </p>
                   <Button
                     onClick={() => {
-                      setSituationId(items.situation.id);
                       setMode("add");
                     }}
                     className="cursor-pointer"

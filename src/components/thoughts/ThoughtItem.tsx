@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FilePenLine, NotebookText, Trash2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useThoughtStore } from "@/store/thoughtStore";
+import { Link } from "@tanstack/react-router";
 
 interface ThoughtItemProps {
     item: IThought,
@@ -17,6 +18,7 @@ const ThoughtItem: React.FC<ThoughtItemProps> = ({ className, item }) => {
   // store values
   const setMode = useThoughtStore((state) => state.setMode);
   const setCurrentThought = useThoughtStore((state) => state.setThought);
+  const situationId = useThoughtStore((state) => state.situationId);
 
   const onEdit = () => {
     setCurrentThought(item);
@@ -56,15 +58,33 @@ const ThoughtItem: React.FC<ThoughtItemProps> = ({ className, item }) => {
       <CardFooter className="gap-1.5 flex-wrap lg:flex-nowrap">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon-lg" className="cursor-pointer">
-              <NotebookText />
+            <Button
+              variant="outline"
+              size="icon-lg"
+              className="cursor-pointer"
+              asChild
+            >
+              <Link
+                to="/proof/$situation_id/$thought_id"
+                params={{
+                  situation_id: String(situationId),
+                  thought_id: String(item.id),
+                }}
+              >
+                <NotebookText />
+              </Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Открыть</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon-lg" className="cursor-pointer" onClick={() => onEdit() }>
+            <Button
+              variant="outline"
+              size="icon-lg"
+              className="cursor-pointer"
+              onClick={() => onEdit()}
+            >
               <FilePenLine />
             </Button>
           </TooltipTrigger>
@@ -72,7 +92,12 @@ const ThoughtItem: React.FC<ThoughtItemProps> = ({ className, item }) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon-lg" className="cursor-pointer" onClick={() => onDelete()}>
+            <Button
+              variant="outline"
+              size="icon-lg"
+              className="cursor-pointer"
+              onClick={() => onDelete()}
+            >
               <Trash2 />
             </Button>
           </TooltipTrigger>

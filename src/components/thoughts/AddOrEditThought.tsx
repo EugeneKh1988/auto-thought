@@ -45,7 +45,7 @@ const AddOrEditThought: React.FC<AddOrEditThoughtProps> = ({
   const mode = useThoughtStore((state) => state.mode);
   const closeDialog = useThoughtStore((state) => state.clearMode);
   const currentThought = useThoughtStore((state) => state.currentThought);
-  const situation_id = useThoughtStore((state) => state.situationId);
+  const situationId = useThoughtStore((state) => state.situationId);
 
   // mutations
   const queryClient = useQueryClient();
@@ -61,8 +61,8 @@ const AddOrEditThought: React.FC<AddOrEditThoughtProps> = ({
     onSubmit: async ({ value }) => {
       //console.log(value);
       // adding data
-      if (mode == "add" && situation_id) {
-        addMutation.mutate({ ...value, situation_id }, {
+      if (mode == "add" && situationId) {
+        addMutation.mutate({ ...value, situation_id: situationId }, {
           onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["thoughts"] });
             closeDialog();

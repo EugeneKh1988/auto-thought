@@ -14,8 +14,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ThoughtSituation_idRouteImport } from './routes/thought.$situation_id'
 import { Route as ApiThoughtsRouteImport } from './routes/api/thoughts'
 import { Route as ApiSituationsRouteImport } from './routes/api/situations'
+import { Route as ApiProofsRouteImport } from './routes/api/proofs'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as ProofSituation_idThought_idRouteImport } from './routes/proof.$situation_id.$thought_id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const SituationsRoute = SituationsRouteImport.update({
@@ -43,6 +45,11 @@ const ApiSituationsRoute = ApiSituationsRouteImport.update({
   path: '/api/situations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiProofsRoute = ApiProofsRouteImport.update({
+  id: '/api/proofs',
+  path: '/api/proofs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const authRegisterRoute = authRegisterRouteImport.update({
   id: '/(auth)/register',
   path: '/register',
@@ -53,6 +60,12 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProofSituation_idThought_idRoute =
+  ProofSituation_idThought_idRouteImport.update({
+    id: '/proof/$situation_id/$thought_id',
+    path: '/proof/$situation_id/$thought_id',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -64,20 +77,24 @@ export interface FileRoutesByFullPath {
   '/situations': typeof SituationsRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
+  '/api/proofs': typeof ApiProofsRoute
   '/api/situations': typeof ApiSituationsRoute
   '/api/thoughts': typeof ApiThoughtsRoute
   '/thought/$situation_id': typeof ThoughtSituation_idRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/proof/$situation_id/$thought_id': typeof ProofSituation_idThought_idRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/situations': typeof SituationsRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
+  '/api/proofs': typeof ApiProofsRoute
   '/api/situations': typeof ApiSituationsRoute
   '/api/thoughts': typeof ApiThoughtsRoute
   '/thought/$situation_id': typeof ThoughtSituation_idRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/proof/$situation_id/$thought_id': typeof ProofSituation_idThought_idRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,10 +102,12 @@ export interface FileRoutesById {
   '/situations': typeof SituationsRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
+  '/api/proofs': typeof ApiProofsRoute
   '/api/situations': typeof ApiSituationsRoute
   '/api/thoughts': typeof ApiThoughtsRoute
   '/thought/$situation_id': typeof ThoughtSituation_idRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/proof/$situation_id/$thought_id': typeof ProofSituation_idThought_idRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,30 +116,36 @@ export interface FileRouteTypes {
     | '/situations'
     | '/login'
     | '/register'
+    | '/api/proofs'
     | '/api/situations'
     | '/api/thoughts'
     | '/thought/$situation_id'
     | '/api/auth/$'
+    | '/proof/$situation_id/$thought_id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/situations'
     | '/login'
     | '/register'
+    | '/api/proofs'
     | '/api/situations'
     | '/api/thoughts'
     | '/thought/$situation_id'
     | '/api/auth/$'
+    | '/proof/$situation_id/$thought_id'
   id:
     | '__root__'
     | '/'
     | '/situations'
     | '/(auth)/login'
     | '/(auth)/register'
+    | '/api/proofs'
     | '/api/situations'
     | '/api/thoughts'
     | '/thought/$situation_id'
     | '/api/auth/$'
+    | '/proof/$situation_id/$thought_id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -128,10 +153,12 @@ export interface RootRouteChildren {
   SituationsRoute: typeof SituationsRoute
   authLoginRoute: typeof authLoginRoute
   authRegisterRoute: typeof authRegisterRoute
+  ApiProofsRoute: typeof ApiProofsRoute
   ApiSituationsRoute: typeof ApiSituationsRoute
   ApiThoughtsRoute: typeof ApiThoughtsRoute
   ThoughtSituation_idRoute: typeof ThoughtSituation_idRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ProofSituation_idThought_idRoute: typeof ProofSituation_idThought_idRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSituationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/proofs': {
+      id: '/api/proofs'
+      path: '/api/proofs'
+      fullPath: '/api/proofs'
+      preLoaderRoute: typeof ApiProofsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)/register': {
       id: '/(auth)/register'
       path: '/register'
@@ -183,6 +217,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/proof/$situation_id/$thought_id': {
+      id: '/proof/$situation_id/$thought_id'
+      path: '/proof/$situation_id/$thought_id'
+      fullPath: '/proof/$situation_id/$thought_id'
+      preLoaderRoute: typeof ProofSituation_idThought_idRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -200,10 +241,12 @@ const rootRouteChildren: RootRouteChildren = {
   SituationsRoute: SituationsRoute,
   authLoginRoute: authLoginRoute,
   authRegisterRoute: authRegisterRoute,
+  ApiProofsRoute: ApiProofsRoute,
   ApiSituationsRoute: ApiSituationsRoute,
   ApiThoughtsRoute: ApiThoughtsRoute,
   ThoughtSituation_idRoute: ThoughtSituation_idRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ProofSituation_idThought_idRoute: ProofSituation_idThought_idRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -25,3 +25,11 @@ export interface IThoughtProperties {
   name?: string
   creation_date?: string
 }
+
+export interface IProof {
+  id: number
+  name: string
+  thought_id: number
+  created_at: string
+  updated_at: string
+}
