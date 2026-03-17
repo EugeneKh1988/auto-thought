@@ -1,0 +1,1 @@
+ALTER TABLE `proof` ADD `proof_type` integer NOT NULL;

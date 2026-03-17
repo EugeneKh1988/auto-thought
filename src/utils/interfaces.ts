@@ -29,6 +29,7 @@ export interface IThoughtProperties {
 export interface IProof {
   id: number
   name: string
+  proof_type: 1 | 2 | 3
   thought_id: number
   created_at: string
   updated_at: string

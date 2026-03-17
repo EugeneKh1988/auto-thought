@@ -29,6 +29,12 @@ const addProofSchema = z.object({
     .refine((v) => v.length > 0 && v.length <= 1000, {
       message: "name must be between 1 and 1000",
     }),
+  proof_type: z
+    .number()
+    .transform((v) => Number(v ?? 0))
+    .refine((v) => Number.isInteger(v) && v && v >= 1 && v <= 3, {
+      message: "proof_type must be between 1 and 3",
+    }),
   situation_id: z
     .number()
     .transform((v) => Number(v ?? 0))
@@ -56,6 +62,12 @@ const updateProofSchema = z.object({
     .transform((v) => String(v ?? ""))
     .refine((v) => v.length > 0 && v.length <= 1000, {
       message: "name must be between 1 and 1000",
+    }),
+  proof_type: z
+    .number()
+    .transform((v) => Number(v ?? 0))
+    .refine((v) => Number.isInteger(v) && v && v >= 1 && v <= 3, {
+      message: "proof_type must be between 1 and 3",
     }),
 });
 
@@ -193,7 +205,7 @@ export const Route = createFileRoute("/api/proofs")({
           );
         }
 
-        const { name, situation_id, thought_id } = result.data;
+        const { name, situation_id, thought_id, proof_type } = result.data;
         const strDate = new Date().toISOString();
 
         // checking authority
@@ -236,7 +248,7 @@ export const Route = createFileRoute("/api/proofs")({
 
         await db
           .insert(proof)
-          .values({ name, thought_id, created_at: strDate, updated_at: strDate })
+          .values({ name, thought_id, proof_type, created_at: strDate, updated_at: strDate })
           .onConflictDoNothing();
 
         return Response.json({ status: "Ok" });
@@ -275,7 +287,7 @@ export const Route = createFileRoute("/api/proofs")({
           );
         }
 
-        const { id, name } = result.data;
+        const { id, name, proof_type } = result.data;
 
         // checking authority
         const checkData = await db
@@ -303,6 +315,7 @@ export const Route = createFileRoute("/api/proofs")({
           .update(proof)
           .set({
             ...(name !== null ? { name } : {}),
+            ...(proof_type !== null ? { proof_type } : {}),
             updated_at: new Date().toISOString(),
           })
           .where(eq(proof.id, id));

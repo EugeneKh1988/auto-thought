@@ -5,6 +5,7 @@ import { thought } from './index';
 export const proof = sqliteTable("proof", {
     id: integer("id").primaryKey().unique(),
     name: text("name").notNull(),
+    proof_type: integer("proof_type").notNull(),
 
     thought_id: integer("thought_id")
         .notNull()

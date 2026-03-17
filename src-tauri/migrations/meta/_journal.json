@@ -43,6 +43,13 @@
       "when": 1773661930740,
       "tag": "0005_late_stellaris",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1773665559854,
+      "tag": "0006_flowery_squirrel_girl",
+      "breakpoints": true
     }
   ]
 }

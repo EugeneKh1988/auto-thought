@@ -1,17 +1,19 @@
 import { IProof, IThought } from '@/utils/interfaces';
 import { keepPreviousData, queryOptions, } from '@tanstack/react-query';
 
-type TProofs = {thoughts: IProof[], thought: IThought, length: number};
+type TProofs = {proofs: IProof[], thought: IThought, length: number};
 
 type TInputProof = {
   name: string;
+  proof_type: number
   situation_id: number;
   thought_id: number;
 };
 
 type TUpdateProof = {
   id: number;
-  name: string;
+  name?: string;
+  proof_type?: number
 };
 
 type TDeleteProof = {
