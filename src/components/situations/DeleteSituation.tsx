@@ -36,7 +36,7 @@ const DeleteSituation: React.FC<DeleteSituationProps> = ({
 
   const onDelete = () => {
     if (mode == "delete" && currentSituation) {
-        delMutation.mutate( { id: currentSituation?.id}, {
+        delMutation.mutate({ id: currentSituation?.id}, {
           onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["situations"] });
             closeDialog();

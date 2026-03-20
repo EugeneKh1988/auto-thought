@@ -5,8 +5,10 @@ import { FieldGroup, Field, FieldLabel, FieldError } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { signUp } from '@/lib/auth-client';
+import { toLocalStorage } from '@/lib/utils';
 import { formOptions, useForm } from '@tanstack/react-form';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { sha256 } from 'js-sha256';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import z from 'zod';
@@ -41,7 +43,7 @@ function RegisterComponent() {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   // navigate
-  const navigate = useNavigate({ from: '/register'});
+  const navigate = useNavigate({ from: "/register" });
 
   const form = useForm({
     ...formOpts,
@@ -57,8 +59,10 @@ function RegisterComponent() {
         {
           onSuccess: () => {
             setLoading(false);
+            // set key
+            toLocalStorage('key', sha256(value.email + value.password));
             // go to home page
-            navigate({ to: '/' });
+            navigate({ to: "/" });
           },
           onError: (ctx) => {
             setLoading(false);
@@ -183,7 +187,7 @@ function RegisterComponent() {
                   onChangeListenTo: ["password"],
                   onChange: ({ value, fieldApi }) => {
                     if (value !== fieldApi.form.getFieldValue("password")) {
-                      return {message: "Пароли не совпадают"};
+                      return { message: "Пароли не совпадают" };
                     }
                     return undefined;
                   },
@@ -221,10 +225,10 @@ function RegisterComponent() {
           <Button
             disabled={isLoading}
             type="submit"
-            form='register-form'
+            form="register-form"
             className="px-4 cursor-pointer"
           >
-            {isLoading ? <Spinner data-icon='icon-start' />: null}
+            {isLoading ? <Spinner data-icon="icon-start" /> : null}
             Регистрация
           </Button>
         </CardFooter>

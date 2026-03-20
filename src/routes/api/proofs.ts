@@ -1,6 +1,8 @@
 import { db } from '@/db';
 import { proof, situation, thought } from '@/db/schema';
 import { auth } from '@/lib/auth';
+import { decryptFields } from '@/lib/utils';
+import { cryptoMiddleware } from '@/middleware/crypto';
 import { createFileRoute } from '@tanstack/react-router';
 import { eq } from 'drizzle-orm';
 import z from 'zod';
@@ -83,8 +85,9 @@ const deleteProofSchema = z.object({
 
 export const Route = createFileRoute("/api/proofs")({
   server: {
+    middleware: [cryptoMiddleware],
     handlers: {
-      GET: async ({ request }) => {
+      GET: async ({ request, context }) => {
         // get user id
         const session = await auth.api.getSession({
           headers: request.headers,
@@ -166,14 +169,16 @@ export const Route = createFileRoute("/api/proofs")({
         const length = await db.$count(proof, eq(proof.thought_id, thought_id));
 
         return Response.json({
-          proofs: res,
+          proofs: decryptFields(res, ["name"], context.crypto.decrypt),
           length,
           thought:
-            thoughtData && thoughtData.length > 0 ? thoughtData[0] : {},
+            thoughtData && thoughtData.length > 0
+              ? decryptFields(thoughtData, ["name"], context.crypto.decrypt)[0]
+              : {},
         });
       },
 
-      POST: async ({ request }) => {
+      POST: async ({ request, context }) => {
         // get user id
         const session = await auth.api.getSession({
           headers: request.headers,
@@ -248,14 +253,14 @@ export const Route = createFileRoute("/api/proofs")({
 
         await db
           .insert(proof)
-          .values({ name, thought_id, proof_type, created_at: strDate, updated_at: strDate })
+          .values({ name: context.crypto.encrypt(name), thought_id, proof_type, created_at: strDate, updated_at: strDate })
           .onConflictDoNothing();
 
         return Response.json({ status: "Ok" });
       },
 
       // update row by id and user_id
-      PUT: async ({ request }) => {
+      PUT: async ({ request, context }) => {
         // get user id
         const session = await auth.api.getSession({
           headers: request.headers,
@@ -314,7 +319,7 @@ export const Route = createFileRoute("/api/proofs")({
         await db
           .update(proof)
           .set({
-            ...(name !== null ? { name } : {}),
+            ...(name !== null ? { name: context.crypto.encrypt(name) } : {}),
             ...(proof_type !== null ? { proof_type } : {}),
             updated_at: new Date().toISOString(),
           })

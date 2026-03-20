@@ -1,6 +1,8 @@
 import { db } from '@/db';
 import { situation } from '@/db/schema';
 import { auth } from '@/lib/auth';
+import { decryptFields } from '@/lib/utils';
+import { cryptoMiddleware } from '@/middleware/crypto';
 import { createFileRoute } from '@tanstack/react-router';
 import { eq, like, SQL, and } from 'drizzle-orm';
 import z from 'zod';
@@ -91,8 +93,9 @@ const deleteSituationSchema = z.object({
 
 export const Route = createFileRoute("/api/situations")({
   server: {
+    middleware: [cryptoMiddleware],
     handlers: {
-      GET: async ({ request }) => {
+      GET: async ({ request, context }) => {
         // get user id
         const session = await auth.api.getSession({
           headers: request.headers,
@@ -144,10 +147,10 @@ export const Route = createFileRoute("/api/situations")({
 
         const length = await db.$count(situation, and(...filters));
 
-        return Response.json({ situations: res, length });
+        return Response.json({ situations: decryptFields(res, ['name', 'description'], context.crypto.decrypt), length });
       },
 
-      POST: async ({ request }) => {
+      POST: async ({ request, context }) => {
         // get user id
         const session = await auth.api.getSession({
           headers: request.headers,
@@ -184,14 +187,20 @@ export const Route = createFileRoute("/api/situations")({
 
         await db
           .insert(situation)
-          .values({ name, description, user_id, created_at: strDate, updated_at: strDate })
+          .values({
+            name: context.crypto.encrypt(name),
+            description: context.crypto.encrypt(description),
+            user_id,
+            created_at: strDate,
+            updated_at: strDate,
+          })
           .onConflictDoNothing();
 
         return Response.json({ status: "Ok" });
       },
 
       // update row by id and user_id
-      PUT: async ({ request }) => {
+      PUT: async ({ request, context }) => {
         // get user id
         const session = await auth.api.getSession({
           headers: request.headers,
@@ -229,8 +238,8 @@ export const Route = createFileRoute("/api/situations")({
         await db
           .update(situation)
           .set({
-            ...(name !== null ? { name } : {}),
-            ...(description !== null ? { description } : {}),
+            ...(name !== null ? { name: context.crypto.encrypt(name) } : {}),
+            ...(description !== null ? { description: context.crypto.encrypt(description) } : {}),
             updated_at: new Date().toISOString(),
           })
           .where(and(eq(situation.user_id, user_id), eq(situation.id, id)));

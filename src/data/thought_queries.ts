@@ -1,3 +1,4 @@
+import { fromLocalStorage } from '@/lib/utils';
 import { ISituation, IThought, IThoughtProperties } from '@/utils/interfaces';
 import { keepPreviousData, queryOptions, } from '@tanstack/react-query';
 
@@ -30,8 +31,9 @@ const getThoughts = async (
     .join('&')
 
   const res = await fetch(
-    `${baseUrl}/api/thoughts?situation_id=${situation_id}&page=${page}&limit=${limit}${query ? `&${query}` : ''}`,
-  )
+    `${baseUrl}/api/thoughts?situation_id=${situation_id}&page=${page}&limit=${limit}${query ? `&${query}` : ""}`,
+    { headers: { "x-crypto-key": fromLocalStorage("key") || "" } },
+  );
   const data = await res.json()
 
   if (!res.ok) {
@@ -50,6 +52,7 @@ export const addThought = async (item: TInputThought) => {
   const res = await fetch(`${baseUrl}/api/thoughts`, {
     method: "POST",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage('key') || "" }
   });
 
   const data = await res.json()
@@ -70,6 +73,7 @@ export const updateThought = async (item: TUpdateThought) => {
   const res = await fetch(`${baseUrl}/api/thoughts`, {
     method: "PUT",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage('key') || "" }
   });
 
   const data = await res.json()
@@ -90,6 +94,7 @@ export const deleteThought = async (item: TDeleteThought) => {
   const res = await fetch(`${baseUrl}/api/thoughts`, {
     method: "DELETE",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage('key') || "" }
   });
 
   const data = await res.json()

@@ -1,3 +1,4 @@
+import { fromLocalStorage } from '@/lib/utils';
 import { IProof, IThought } from '@/utils/interfaces';
 import { keepPreviousData, queryOptions, } from '@tanstack/react-query';
 
@@ -27,7 +28,8 @@ const getProofs = async (
   { thought_id, situation_id }: { thought_id: string; situation_id: string }
 ): Promise<TProofs> => {
   const res = await fetch(
-    `${baseUrl}/api/proofs?situation_id=${situation_id}&thought_id=${thought_id}`,
+    `${baseUrl}/api/proofs?situation_id=${situation_id}&thought_id=${thought_id}`, 
+    { headers: { "x-crypto-key": fromLocalStorage("key") || "" } }
   )
   const data = await res.json()
 
@@ -47,6 +49,7 @@ export const addProof = async (item: TInputProof) => {
   const res = await fetch(`${baseUrl}/api/proofs`, {
     method: "POST",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage("key") || "" }
   });
 
   const data = await res.json()
@@ -67,6 +70,7 @@ export const updateProof = async (item: TUpdateProof) => {
   const res = await fetch(`${baseUrl}/api/proofs`, {
     method: "PUT",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage("key") || "" }
   });
 
   const data = await res.json()
@@ -87,6 +91,7 @@ export const deleteProof = async (item: TDeleteProof) => {
   const res = await fetch(`${baseUrl}/api/proofs`, {
     method: "DELETE",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage("key") || "" }
   });
 
   const data = await res.json()

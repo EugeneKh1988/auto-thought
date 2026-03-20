@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { signIn } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
+import { toLocalStorage } from '@/lib/utils';
+import { sha256 } from 'js-sha256';
 
 export const Route = createFileRoute('/(auth)/login')({
   component: LoginComponent,
@@ -48,6 +50,8 @@ function LoginComponent() {
         {
           onSuccess: () => {
             setLoading(false);
+            // set key
+            toLocalStorage('key', sha256(value.email + value.password));
             // go to home page
             navigate({ to: "/" });
           },

@@ -1,3 +1,4 @@
+import { fromLocalStorage } from '@/lib/utils';
 import { ISituation, ISituationProperties } from '@/utils/interfaces';
 import { keepPreviousData, queryOptions, } from '@tanstack/react-query';
 
@@ -30,8 +31,9 @@ const getSituations = async (
     .join('&')
 
   const res = await fetch(
-    `${baseUrl}/api/situations?page=${page}&limit=${limit}${query ? `&${query}` : ''}`,
-  )
+    `${baseUrl}/api/situations?page=${page}&limit=${limit}${query ? `&${query}` : ""}`,
+    { headers: { "x-crypto-key": fromLocalStorage('key') || "" } },
+  );
   const data = await res.json()
 
   if (!res.ok) {
@@ -50,6 +52,7 @@ export const addSituation = async (item: TInputSituation) => {
   const res = await fetch(`${baseUrl}/api/situations`, {
     method: "POST",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage('key') || "" }
   });
 
   const data = await res.json()
@@ -70,6 +73,7 @@ export const updateSituation = async (item: TUpdateSituation) => {
   const res = await fetch(`${baseUrl}/api/situations`, {
     method: "PUT",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage('key') || "" }
   });
 
   const data = await res.json()
@@ -90,6 +94,7 @@ export const deleteSituation = async (item: TDeleteSituation) => {
   const res = await fetch(`${baseUrl}/api/situations`, {
     method: "DELETE",
     body: JSON.stringify(item),
+    headers: { "x-crypto-key": fromLocalStorage('key') || "" }
   });
 
   const data = await res.json()
@@ -105,7 +110,7 @@ export const deleteSituation = async (item: TDeleteSituation) => {
   return data;
 };
 
-export function situationsOptions(page: number, limit: number, options: ISituationProperties = {}) {
+export function situationsOptions(page: number, limit: number, options: ISituationProperties) {
   return queryOptions({
     queryKey: ['situations', page, limit],
     queryFn: () => getSituations({ page, limit }, options),
