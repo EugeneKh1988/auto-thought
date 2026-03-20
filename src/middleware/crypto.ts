@@ -15,7 +15,14 @@ export const cryptoMiddleware = createMiddleware().server(
       if (session) {
         await auth.api.revokeSessions({ headers });
       }
-      throw Error("Неправильный ключ");
+      return new Response(
+        JSON.stringify({
+          error: "Access denied",
+          details: "Неправильный ключ",
+        }),
+        { status: 403 },
+      );
+      //throw Error("Неправильный ключ");
     }
     const KEY: Buffer = crypto.scryptSync(strKey, "salt", 32);
 

@@ -1,9 +1,12 @@
-import { Link, linkOptions, useLocation, useRouter, } from "@tanstack/react-router";
+import { Link, linkOptions, useLocation, useNavigate, useRouter, } from "@tanstack/react-router";
 import Container from "./Container";
 import { Home, LogIn, MoveLeft, SquareArrowRightExit } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { useEffect } from "react";
+import { delFromLocalStorage } from "@/lib/utils";
+import { session } from "@/db/schema";
 
 interface NavProps {
     className?: string,
@@ -28,6 +31,14 @@ const Nav: React.FC<NavProps> = ({className, }) => {
 
   const router = useRouter();
   const loc = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!session) {
+      delFromLocalStorage("key");
+      navigate({ to: '/login'});
+    }
+  }, [session]);
 
   //console.log(loc.pathname);
 
@@ -71,7 +82,10 @@ const Nav: React.FC<NavProps> = ({className, }) => {
           {data?.user && data?.user.id ? (
             <Button
               variant="ghost"
-              onClick={() => signOut()}
+              onClick={async () => {
+                await signOut();
+                delFromLocalStorage("key");
+              }}
               className="cursor-pointer size-8 md:size-12"
             >
               <SquareArrowRightExit className="size-8 md:size-12" />
