@@ -1,3 +1,4 @@
+import { getProofs } from '@/data/proof';
 import { fromLocalStorage } from '@/lib/utils';
 import { IProof, IThought } from '@/utils/interfaces';
 import { keepPreviousData, queryOptions, } from '@tanstack/react-query';
@@ -24,7 +25,7 @@ type TDeleteProof = {
 const baseUrl = process.env.BETTER_AUTH_URL ? process.env.BETTER_AUTH_URL: 'http://localhost:3000';
 
 
-const getProofs = async (
+const getProofs_ = async (
   { thought_id, situation_id }: { thought_id: string; situation_id: string }
 ): Promise<TProofs> => {
   const res = await fetch(

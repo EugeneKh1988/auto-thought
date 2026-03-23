@@ -17,8 +17,8 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { useThoughtStore } from "@/store/thoughtStore";
 import { useProofStore } from "@/store/proofStore";
-import { addProof, updateProof } from "@/queries/proof_queries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { addProof, updateProof } from "@/data/proof";
 
 interface AddOrEditProofProps {
   className?: string;
