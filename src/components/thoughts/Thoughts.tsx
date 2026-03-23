@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SearchAlert, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { thoughtsOptions } from "@/data/thought_queries";
+import { thoughtsOptions } from "@/queries/thought_queries";
 import ThoughtItem from "./ThoughtItem";
 import { useThoughtStore } from "@/store/thoughtStore";
 import AddOrEditThought from "./AddOrEditThought";

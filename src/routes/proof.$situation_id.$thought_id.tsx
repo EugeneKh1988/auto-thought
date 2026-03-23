@@ -5,6 +5,7 @@ import { authMiddleware } from '@/middleware/auth';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute("/proof/$situation_id/$thought_id")({
+  ssr: false,
   component: RouteComponent,
   beforeLoad: async () => {
     const session = await authClient.getSession();

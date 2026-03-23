@@ -15,9 +15,9 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from "@/components/ui/input-group";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addSituation, updateSituation } from "@/data/situation_queries";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { addSituation, updateSituation } from "@/data/situations";
 
 interface AddOrEditSituationProps {
   className?: string;

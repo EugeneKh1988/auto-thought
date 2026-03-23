@@ -14,6 +14,7 @@ import { toLocalStorage } from '@/lib/utils';
 import { sha256 } from 'js-sha256';
 
 export const Route = createFileRoute('/(auth)/login')({
+  ssr: false,
   component: LoginComponent,
 });
 

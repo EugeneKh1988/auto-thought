@@ -10,8 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSituation } from "@/data/situation_queries";
 import { toast } from "sonner";
+import { deleteSituation } from "@/data/situations";
 
 interface DeleteSituationProps {
   className?: string;

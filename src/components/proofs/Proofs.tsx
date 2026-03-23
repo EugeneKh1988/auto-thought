@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SearchAlert, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useThoughtStore } from "@/store/thoughtStore";
-import { proofsOptions } from "@/data/proof_queries";
+import { proofsOptions } from "@/queries/proof_queries";
 import { useProofStore } from "@/store/proofStore";
 import AddOrEditProof from "./AddOrEditProof";
 import ProofItem from "./ProofItem";

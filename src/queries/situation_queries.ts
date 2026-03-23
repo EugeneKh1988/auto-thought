@@ -1,3 +1,4 @@
+import { getSituations } from '@/data/situations';
 import { fromLocalStorage } from '@/lib/utils';
 import { ISituation, ISituationProperties } from '@/utils/interfaces';
 import { keepPreviousData, queryOptions, } from '@tanstack/react-query';
@@ -19,7 +20,7 @@ type TDeleteSituation = {
 const baseUrl = process.env.BETTER_AUTH_URL ? process.env.BETTER_AUTH_URL: 'http://localhost:3000';
 
 
-const getSituations = async (
+const getSituations_ = async (
   { page = 1, limit = 3 }: { page: number; limit: number },
   options: ISituationProperties,
 ): Promise<TSituations> => {

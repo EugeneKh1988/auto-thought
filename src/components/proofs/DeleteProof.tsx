@@ -11,7 +11,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useProofStore } from "@/store/proofStore";
-import { deleteProof } from "@/data/proof_queries";
+import { deleteProof } from "@/queries/proof_queries";
 
 interface DeleteProofProps {
   className?: string;

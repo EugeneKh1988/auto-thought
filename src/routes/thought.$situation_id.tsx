@@ -6,6 +6,7 @@ import { IThoughtProperties } from '@/utils/interfaces';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/thought/$situation_id')({
+  ssr: false,
   component: RouteComponent,
   beforeLoad: async () => {
       const session = await authClient.getSession();

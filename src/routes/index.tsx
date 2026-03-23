@@ -21,6 +21,7 @@ const Home: React.FC = () => {
 };
 
 export const Route = createFileRoute("/")({
+  ssr: false,
   component: Home,
   beforeLoad: async () => {
     const session = await authClient.getSession();

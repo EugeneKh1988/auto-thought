@@ -1,7 +1,7 @@
 import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { situationsOptions } from "@/data/situation_queries";
+import { situationsOptions } from "@/queries/situation_queries";
 import { SearchAlert, Trash } from "lucide-react";
 import AddOrEditSituation from "./AddOrEditSituation";
 import { Button } from "@/components/ui/button";

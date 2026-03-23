@@ -29,6 +29,32 @@ export function decryptFields<T extends Record<string, any>>(
   });
 }
 
+export async function asyncDecryptFields<T extends Record<string, any>>(
+  data: T[],
+  fields: (keyof T)[],
+  decrypt: (v: string) => Promise<string>,
+): Promise<T[]> {
+  return await Promise.all(
+    data.map(async (item) => {
+      const copy = { ...item };
+
+      for (const key of fields) {
+        const value = copy[key];
+
+        if (typeof value === "string" && value.length > 0) {
+          try {
+            copy[key] = (await decrypt(value)) as T[keyof T];
+          } catch (error) {
+            copy[key] = "Ошибка расшифровки данных" as T[keyof T];
+          }
+        }
+      }
+
+      return copy;
+    }),
+  );
+}
+
 // get from localStorage
 export function fromLocalStorage<StorageType>(key: string): StorageType | null {
   // null if run on server

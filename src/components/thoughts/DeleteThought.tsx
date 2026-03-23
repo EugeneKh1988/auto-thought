@@ -11,7 +11,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useThoughtStore } from "@/store/thoughtStore";
-import { deleteThought } from "@/data/thought_queries";
+import { deleteThought } from "@/queries/thought_queries";
 
 interface DeleteThoughtProps {
   className?: string;
