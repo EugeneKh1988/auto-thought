@@ -1,3 +1,4 @@
+import { getThoughts } from '@/data/thought';
 import { fromLocalStorage } from '@/lib/utils';
 import { ISituation, IThought, IThoughtProperties } from '@/utils/interfaces';
 import { keepPreviousData, queryOptions, } from '@tanstack/react-query';
@@ -19,7 +20,7 @@ type TDeleteThought = {
 const baseUrl = process.env.BETTER_AUTH_URL ? process.env.BETTER_AUTH_URL: 'http://localhost:3000';
 
 
-const getThoughts = async (
+const getThoughts_ = async (
   { page = 1, limit = 3, situation_id }: { page: number; limit: number; situation_id: string },
   options: IThoughtProperties,
 ): Promise<TThoughts> => {
