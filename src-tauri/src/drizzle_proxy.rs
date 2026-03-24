@@ -65,7 +65,7 @@ pub async fn run_sql(app: AppHandle, query: SqlQuery) -> Result<Vec<SqlRow>, Str
     Ok(result)
 }
 
-fn get_app_db_path(app: &AppHandle) -> Result<PathBuf, String> {
+pub fn get_app_db_path(app: &AppHandle) -> Result<PathBuf, String> {
     app.path()
         .app_data_dir()
         .map(|p| p.join("database.db"))
