@@ -1,8 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import Container from "@/components/Container";
 import { BookA } from 'lucide-react';
-import { authMiddleware } from "@/middleware/auth";
-import { authClient } from "@/lib/auth-client";
+import { isAuth } from "@/lib/utils";
 
 const Home: React.FC = () => {
 
@@ -24,13 +23,14 @@ export const Route = createFileRoute("/")({
   ssr: false,
   component: Home,
   beforeLoad: async () => {
-    const session = await authClient.getSession();
+    //const session = await authClient.getSession();
+    const logged = await isAuth();
 
-    if (!session.data) {
+    if (!logged) {
       throw redirect({ to: "/login" });
     }
   },
   server: {
-    middleware: [authMiddleware],
+    middleware: [/* authMiddleware */],
   },
 });

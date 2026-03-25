@@ -53,14 +53,16 @@ pub async fn register(
     state: State<'_, AppState>,
     email: String,
     password: String,
+    name: String,
 ) -> Result<(), String> {
     let hash = hash_password(&password);
 
     sqlx::query(
-        "INSERT INTO users (email, password) VALUES (?, ?)"
+        "INSERT INTO users (email, password, name) VALUES (?, ?, ?)"
     )
     .bind(email)
     .bind(hash)
+    .bind(name)
     .execute(&state.db)
     .await
     .map_err(|e| e.to_string())?;

@@ -1,7 +1,6 @@
 import Container from '@/components/Container';
 import Situations from '@/components/situations/Situations';
-import { authClient } from '@/lib/auth-client';
-import { authMiddleware } from '@/middleware/auth'
+import { isAuth } from '@/lib/utils';
 import { ISituationProperties } from '@/utils/interfaces';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
@@ -9,21 +8,22 @@ export const Route = createFileRoute("/situations")({
   ssr: false,
   component: NegativeComponent,
   beforeLoad: async () => {
-    const session = await authClient.getSession();
+    //const session = await authClient.getSession();
+    const logged = await isAuth();
 
-    if (!session.data) {
+    if (!logged) {
       throw redirect({ to: "/login" });
     }
   },
   server: {
-    middleware: [authMiddleware],
+    middleware: [/* authMiddleware */],
   },
   validateSearch: (search: Record<string, unknown>): ISituationProperties => {
-      return {
-        name: (search?.name as string) || undefined,
-        creation_date: (search?.creation_date as string) || undefined,
-      }
-    },
+    return {
+      name: (search?.name as string) || undefined,
+      creation_date: (search?.creation_date as string) || undefined,
+    };
+  },
 });
 
 function NegativeComponent() {

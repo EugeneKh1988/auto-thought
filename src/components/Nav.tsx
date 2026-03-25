@@ -1,12 +1,11 @@
 import { Link, linkOptions, useLocation, useNavigate, useRouter, } from "@tanstack/react-router";
 import Container from "./Container";
 import { Home, LogIn, MoveLeft, SquareArrowRightExit } from "lucide-react";
-import { useSession, signOut } from "@/lib/auth-client";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { useEffect } from "react";
-import { delFromLocalStorage } from "@/lib/utils";
-import { session } from "@/db/schema";
+import { delFromLocalStorage, getUserId, logout } from "@/lib/utils";
+import { useAuthStore } from "@/store/authStore";
 
 interface NavProps {
     className?: string,
@@ -27,18 +26,38 @@ const Nav: React.FC<NavProps> = ({className, }) => {
   const classNameValue = className ? `${className}` : "";
 
   // session
-  const { data } = useSession();
+  //const { data } = useSession();
+  const isLogged = useAuthStore(state => state.isLogged);
+  const setLoginStatus = useAuthStore(state => state.setLogged);
+  const userId = useAuthStore(state => state.user_id);
+  const setUserId = useAuthStore(state => state.seUserId);
+  const clearUserId = useAuthStore(state => state.clearUserId);
+  const hasHydrated = useAuthStore((s) => s.hasHydrated);
 
   const router = useRouter();
   const loc = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!session) {
-      delFromLocalStorage("key");
-      navigate({ to: '/login'});
-    }
-  }, [session]);
+    if (!hasHydrated) return;
+    (async () => {
+      if (!isLogged) {
+        const res = await logout();
+        if (res) {
+          delFromLocalStorage("key");
+          delFromLocalStorage("token");
+          clearUserId();
+          navigate({ to: "/login" });
+        }
+      }
+      if (isLogged) {
+        const retUserId = await getUserId();
+        if(userId != retUserId) {
+          setUserId(retUserId);
+        }
+      }
+    })();
+  }, [isLogged, hasHydrated]);
 
   //console.log(loc.pathname);
 
@@ -79,13 +98,10 @@ const Nav: React.FC<NavProps> = ({className, }) => {
           })}
         </div>
         <div>
-          {data?.user && data?.user.id ? (
+          {isLogged ? (
             <Button
               variant="ghost"
-              onClick={async () => {
-                await signOut();
-                delFromLocalStorage("key");
-              }}
+              onClick={() => setLoginStatus(false)}
               className="cursor-pointer size-8 md:size-12"
             >
               <SquareArrowRightExit className="size-8 md:size-12" />

@@ -7,11 +7,12 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { signIn } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
 import { toLocalStorage } from '@/lib/utils';
 import { sha256 } from 'js-sha256';
+import { invoke } from '@tauri-apps/api/core';
+import { useAuthStore } from '@/store/authStore';
 
 export const Route = createFileRoute('/(auth)/login')({
   ssr: false,
@@ -35,6 +36,8 @@ const formOpts = formOptions({ defaultValues });
 function LoginComponent() {
   const [isLoading, setLoading] = useState<boolean>(false);
 
+  const setLogged = useAuthStore((state) => state.setLogged);
+
   // navigate
   const navigate = useNavigate({ from: "/login" });
 
@@ -42,7 +45,31 @@ function LoginComponent() {
     ...formOpts,
     onSubmit: async ({ value }) => {
       //console.log(value);
-      signIn.email(
+      try {
+        // start loading
+        setLoading(true);
+        // login
+        const token = await invoke<string>("login", {
+          email: value.email,
+          password: value.password,
+        });
+        // set key
+        toLocalStorage("key", sha256(value.email + value.password));
+        // set token
+        toLocalStorage("token", token);
+        // set login status
+        setLogged(true);
+        // go to home page
+        navigate({ to: "/" });
+      } catch {
+        toast.error("Ошибка входа", {
+          position: "bottom-right",
+        });
+      } finally {
+        setLoading(false);
+      }
+            
+      /* signIn.email(
         {
           email: value.email,
           password: value.password,
@@ -67,7 +94,7 @@ function LoginComponent() {
             setLoading(true);
           },
         },
-      );
+      ); */
     },
     validators: {
       onSubmit: formSchema,

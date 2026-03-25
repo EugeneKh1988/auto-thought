@@ -1,21 +1,21 @@
 import Container from '@/components/Container';
 import Proofs from '@/components/proofs/Proofs';
-import { authClient } from '@/lib/auth-client';
-import { authMiddleware } from '@/middleware/auth';
+import { isAuth } from '@/lib/utils';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute("/proof/$situation_id/$thought_id")({
   ssr: false,
   component: RouteComponent,
   beforeLoad: async () => {
-    const session = await authClient.getSession();
+    //const session = await authClient.getSession();
+    const logged = await isAuth();
 
-    if (!session.data) {
+    if (!logged) {
       throw redirect({ to: "/login" });
     }
   },
   server: {
-    middleware: [authMiddleware],
+    middleware: [/* authMiddleware */],
   },
 });
 
