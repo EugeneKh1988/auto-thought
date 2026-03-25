@@ -48,10 +48,10 @@ const SituationItem: React.FC<SituationItemProps> = ({ className, item }) => {
       </CardHeader>
       <CardContent>
         <p className="text-[12px]">
-          Дата создания: <span>{dateFormat(item.created_at)}</span>
+          Дата создания: <span>{dateFormat(item?.created_at || "")}</span>
         </p>
         <p className="text-[12px]">
-          Дата изменения: <span>{dateFormat(item.updated_at)}</span>
+          Дата изменения: <span>{dateFormat(item?.updated_at || "")}</span>
         </p>
       </CardContent>
       <CardFooter className="gap-1.5 flex-wrap lg:flex-nowrap">

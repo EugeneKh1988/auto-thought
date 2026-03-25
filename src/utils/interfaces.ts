@@ -2,7 +2,7 @@ export interface ISituation {
   id: number
   name: string
   description?: string | null
-  user_id: string
+  user_id: number
   created_at?: string | null
   updated_at?: string | null
 }
@@ -15,10 +15,10 @@ export interface ISituationProperties {
 export interface IThought {
   id: number
   name: string
-  strength?: number
+  strength?: number | null
   situation_id: number
-  created_at: string
-  updated_at: string
+  created_at?: string | null
+  updated_at?: string | null
 }
 
 export interface IThoughtProperties {
@@ -29,8 +29,8 @@ export interface IThoughtProperties {
 export interface IProof {
   id: number
   name: string
-  proof_type: 1 | 2 | 3
+  proof_type: number
   thought_id: number
-  created_at: string
-  updated_at: string
+  created_at?: string | null
+  updated_at?: string | null
 }

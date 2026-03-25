@@ -1,9 +1,12 @@
 import db from "@/db/database.client";
 import { proof, situation, thought } from "@/db/schema";
 import { cryptoFn } from "@/lib/crypto";
-import { asyncDecryptFields } from "@/lib/utils";
+import { asyncDecryptFields, getUserId, processAuthByUserId } from "@/lib/utils";
+import { IProof, IThought } from "@/utils/interfaces";
 import { createClientOnlyFn } from "@tanstack/react-start";
 import { eq, sql } from "drizzle-orm";
+
+type TProofs = {proofs: IProof[], thought?: IThought, length: number};
 
 type TInputProof = {
   name: string;
@@ -23,10 +26,17 @@ type TDeleteProof = {
 };
 
 export const getProofs = createClientOnlyFn(
-  async (options: { thought_id: string; situation_id: string }) => {
+  async (options: { thought_id: string; situation_id: string }): Promise<TProofs> => {
     const { thought_id, situation_id } = options;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if (!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     // checking authority
     const situationData = await db
@@ -80,7 +90,7 @@ export const getProofs = createClientOnlyFn(
       thought:
         thoughtData && thoughtData.length > 0
           ? (await asyncDecryptFields(thoughtData, ["name"], crypto.decrypt))[0]
-          : {},
+          : undefined,
     };
   },
 );
@@ -89,7 +99,14 @@ export const addProof = createClientOnlyFn(async (item: TInputProof) => {
   const { name, situation_id, thought_id, proof_type } = item;
   const strDate = new Date().toISOString();
 
-  const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+  const user_id = await getUserId();
+  processAuthByUserId(user_id);
+  if (!user_id) {
+    throw {
+      message: "Access denied",
+      details: "User is not defined",
+    };
+  }
 
   // checking authority
   const situationData = await db
@@ -142,7 +159,14 @@ export const addProof = createClientOnlyFn(async (item: TInputProof) => {
 export const updateProof = createClientOnlyFn(async (item: TUpdateProof) => {
   const { name, id, proof_type } = item;
 
-  const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+  const user_id = await getUserId();
+  processAuthByUserId(user_id);
+  if (!user_id) {
+    throw {
+      message: "Access denied",
+      details: "User is not defined",
+    };
+  }
 
   // checking authority
   const checkData = await db
@@ -180,7 +204,14 @@ export const updateProof = createClientOnlyFn(async (item: TUpdateProof) => {
 export const deleteProof = createClientOnlyFn(async (item: TDeleteProof) => {
     const { id } = item;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if (!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     // checking authority
     const checkData = await db

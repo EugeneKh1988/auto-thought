@@ -75,7 +75,7 @@ const Thoughts: React.FC<ThoughtsProps> = ({ className }) => {
       <AddOrEditThought />
       <DeleteThought />
       <p className="text-[20px] text-center font-medium">
-        Автоматические мысли о ситуации &#171;{items?.situation.name}&#187;
+        Автоматические мысли о ситуации &#171;{items?.situation?.name}&#187;
       </p>
       {items && Array.isArray(items.thoughts) && !isError ? (
         <>

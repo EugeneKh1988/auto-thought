@@ -70,7 +70,7 @@ const Proofs: React.FC<ProofsProps> = ({ className }) => {
       <AddOrEditProof />
       <DeleteProof />
       <p className="text-[20px] text-center font-medium">
-        Доказательства автоматической мысли &#171;{items?.thought.name}&#187;
+        Доказательства автоматической мысли &#171;{items?.thought?.name}&#187;
       </p>
       {items && Array.isArray(items.proofs) && !isError ? (
         <>

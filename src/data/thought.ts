@@ -1,10 +1,12 @@
 import db from "@/db/database.client";
 import { situation, thought } from "@/db/schema";
 import { cryptoFn } from "@/lib/crypto";
-import { asyncDecryptFields } from "@/lib/utils";
-import { IThought, IThoughtProperties } from "@/utils/interfaces";
+import { asyncDecryptFields, getUserId, processAuthByUserId } from "@/lib/utils";
+import { ISituation, IThought, IThoughtProperties } from "@/utils/interfaces";
 import { createClientOnlyFn } from "@tanstack/react-start";
 import { eq, like, SQL, and, sql } from "drizzle-orm";
+
+type TThoughts = {thoughts: IThought[], situation?: ISituation, length: number};
 
 type TInputThought = Omit<IThought, "id" | "created_at" | "updated_at">;
 
@@ -22,11 +24,18 @@ export const getThoughts = createClientOnlyFn(
   async (
     nav: { page: number; limit: number; situation_id: string },
     options: IThoughtProperties,
-  ) => {
+  ): Promise<TThoughts> => {
     const { page, limit, situation_id } = nav;
     const { name, creation_date } = options;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if (!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     // checking authority
     const situationData = await db
@@ -80,7 +89,7 @@ export const getThoughts = createClientOnlyFn(
                 crypto.decrypt,
               )
             )[0]
-          : {},
+          : undefined,
       length: count && count.length > 0 ? Number(count[0].total) : 0,
     };
   },
@@ -90,7 +99,14 @@ export const addThought = createClientOnlyFn(async (item: TInputThought) => {
   const { name, strength, situation_id } = item;
   const strDate = new Date().toISOString();
 
-  const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+  const user_id = await getUserId();
+  processAuthByUserId(user_id);
+  if (!user_id) {
+    throw {
+      message: "Access denied",
+      details: "User is not defined",
+    };
+  }
 
   // checking authority
   const situationData = await db
@@ -128,7 +144,14 @@ export const updateThought = createClientOnlyFn(
   async (item: TUpdateThought) => {
     const { name, strength, id } = item;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if (!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     // checking authority
     const situationData = await db
@@ -167,7 +190,14 @@ export const deleteThought = createClientOnlyFn(
   async (item: TDeleteThought) => {
     const { id } = item;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if (!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     // checking authority
     const situationData = await db

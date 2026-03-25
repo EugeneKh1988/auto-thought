@@ -1,11 +1,13 @@
 import db from "@/db/database.client";
 import { situation } from "@/db/schema";
 import { cryptoFn } from "@/lib/crypto";
-import { asyncDecryptFields } from "@/lib/utils";
+import { asyncDecryptFields, getUserId, processAuthByUserId } from "@/lib/utils";
 import { ISituation, ISituationProperties } from "@/utils/interfaces";
 import { createClientOnlyFn } from "@tanstack/react-start";
 import { and, eq, like, sql, SQL } from "drizzle-orm";
 import z from "zod";
+
+type TSituations = {situations: ISituation[], length: number};
 
 type TInputSituation = Omit<
   ISituation,
@@ -59,7 +61,7 @@ export const getSituations = createClientOnlyFn(
   async (
     nav: { page: number; limit: number },
     options: ISituationProperties,
-  ) => {
+  ): Promise<TSituations> => {
     const result = searchSituationsSchema.safeParse({
       ...nav,
       ...options,
@@ -74,7 +76,14 @@ export const getSituations = createClientOnlyFn(
 
     const { name, creation_date, page, limit } = result.data;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if(!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     const filters: SQL[] = [];
     name ? filters.push(like(situation.name, `%${name}%`)) : null;
@@ -117,7 +126,14 @@ export const addSituation = createClientOnlyFn(
     const { name, description } = item;
     const strDate = new Date().toISOString();
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if(!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     const crypto = await cryptoFn();
 
@@ -140,7 +156,14 @@ export const updateSituation = createClientOnlyFn(
   async (item: TUpdateSituation) => {
     const { id, name, description } = item;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if(!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     const crypto = await cryptoFn();
 
@@ -164,7 +187,14 @@ export const deleteSituation = createClientOnlyFn(
   async (item: TDeleteSituation) => {
     const { id } = item;
 
-    const user_id = "Ud16DVUbRqbKqRYYH5KLXhcikQHTjGXW";
+    const user_id = await getUserId();
+    processAuthByUserId(user_id);
+    if(!user_id) {
+      throw {
+        message: "Access denied",
+        details: "User is not defined",
+      };
+    }
 
     await db
       .delete(situation)
