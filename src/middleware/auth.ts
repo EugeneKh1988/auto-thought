@@ -1,4 +1,4 @@
-import { redirect } from "@tanstack/react-router";
+/* import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
@@ -13,3 +13,4 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
 
   return await next();
 });
+ */

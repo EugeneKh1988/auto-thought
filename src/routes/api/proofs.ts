@@ -1,4 +1,4 @@
-import { db } from '@/db';
+/* import { db } from '@/db';
 import { proof, situation, thought } from '@/db/schema';
 import { auth } from '@/lib/auth';
 import { decryptFields } from '@/lib/utils';
@@ -393,3 +393,4 @@ export const Route = createFileRoute("/api/proofs")({
     },
   },
 });
+ */

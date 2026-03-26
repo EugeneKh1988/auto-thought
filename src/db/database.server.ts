@@ -4,7 +4,7 @@ import * as schema from "./schema";
 import path from "path";
 import os from "os";
 
-export function getDbPath() {
+function getDbPath() {
   const home = os.homedir();
   const platform = process.platform;
 
@@ -39,4 +39,4 @@ export function getDbPath() {
 
 const sqlite = new Database(getDbPath());
 
-export const db = drizzle(sqlite, { schema });
+const db = drizzle(sqlite, { schema });

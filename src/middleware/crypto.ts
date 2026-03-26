@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+//import { auth } from "@/lib/auth";
 import { createMiddleware } from "@tanstack/react-start";
 import crypto from "crypto";
 
@@ -10,11 +10,11 @@ export const cryptoMiddleware = createMiddleware().server(
     const strKey:string | null = request.headers.get("x-crypto-key");
     
     if (!strKey) {
-      const headers = request.headers;
-      const session = await auth.api.getSession({ headers });
+      //const headers = request.headers;
+      /* const session = await auth.api.getSession({ headers });
       if (session) {
         await auth.api.revokeSessions({ headers });
-      }
+      } */
       return new Response(
         JSON.stringify({
           error: "Access denied",

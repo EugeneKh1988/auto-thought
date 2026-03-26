@@ -1,4 +1,4 @@
-import { db as db_server } from './database.server';
+//import { db as db_server } from './database.server';
 //import db_client from './database.client';
 //import { createIsomorphicFn } from '@tanstack/react-start';
 
@@ -13,4 +13,4 @@ import { db as db_server } from './database.server';
     ? require("./database.server").db
     : require("./database.client").db; */
 
-export const db = db_server; 
+//export const db = db_server; 

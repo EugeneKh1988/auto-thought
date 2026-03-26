@@ -12,13 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SituationsRouteImport } from './routes/situations'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ThoughtSituation_idRouteImport } from './routes/thought.$situation_id'
-import { Route as ApiThoughtsRouteImport } from './routes/api/thoughts'
-import { Route as ApiSituationsRouteImport } from './routes/api/situations'
-import { Route as ApiProofsRouteImport } from './routes/api/proofs'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as ProofSituation_idThought_idRouteImport } from './routes/proof.$situation_id.$thought_id'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const SituationsRoute = SituationsRouteImport.update({
   id: '/situations',
@@ -33,21 +29,6 @@ const IndexRoute = IndexRouteImport.update({
 const ThoughtSituation_idRoute = ThoughtSituation_idRouteImport.update({
   id: '/thought/$situation_id',
   path: '/thought/$situation_id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiThoughtsRoute = ApiThoughtsRouteImport.update({
-  id: '/api/thoughts',
-  path: '/api/thoughts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiSituationsRoute = ApiSituationsRouteImport.update({
-  id: '/api/situations',
-  path: '/api/situations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiProofsRoute = ApiProofsRouteImport.update({
-  id: '/api/proofs',
-  path: '/api/proofs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authRegisterRoute = authRegisterRouteImport.update({
@@ -66,22 +47,13 @@ const ProofSituation_idThought_idRoute =
     path: '/proof/$situation_id/$thought_id',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/situations': typeof SituationsRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
-  '/api/proofs': typeof ApiProofsRoute
-  '/api/situations': typeof ApiSituationsRoute
-  '/api/thoughts': typeof ApiThoughtsRoute
   '/thought/$situation_id': typeof ThoughtSituation_idRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
   '/proof/$situation_id/$thought_id': typeof ProofSituation_idThought_idRoute
 }
 export interface FileRoutesByTo {
@@ -89,11 +61,7 @@ export interface FileRoutesByTo {
   '/situations': typeof SituationsRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
-  '/api/proofs': typeof ApiProofsRoute
-  '/api/situations': typeof ApiSituationsRoute
-  '/api/thoughts': typeof ApiThoughtsRoute
   '/thought/$situation_id': typeof ThoughtSituation_idRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
   '/proof/$situation_id/$thought_id': typeof ProofSituation_idThought_idRoute
 }
 export interface FileRoutesById {
@@ -102,11 +70,7 @@ export interface FileRoutesById {
   '/situations': typeof SituationsRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
-  '/api/proofs': typeof ApiProofsRoute
-  '/api/situations': typeof ApiSituationsRoute
-  '/api/thoughts': typeof ApiThoughtsRoute
   '/thought/$situation_id': typeof ThoughtSituation_idRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
   '/proof/$situation_id/$thought_id': typeof ProofSituation_idThought_idRoute
 }
 export interface FileRouteTypes {
@@ -116,11 +80,7 @@ export interface FileRouteTypes {
     | '/situations'
     | '/login'
     | '/register'
-    | '/api/proofs'
-    | '/api/situations'
-    | '/api/thoughts'
     | '/thought/$situation_id'
-    | '/api/auth/$'
     | '/proof/$situation_id/$thought_id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -128,11 +88,7 @@ export interface FileRouteTypes {
     | '/situations'
     | '/login'
     | '/register'
-    | '/api/proofs'
-    | '/api/situations'
-    | '/api/thoughts'
     | '/thought/$situation_id'
-    | '/api/auth/$'
     | '/proof/$situation_id/$thought_id'
   id:
     | '__root__'
@@ -140,11 +96,7 @@ export interface FileRouteTypes {
     | '/situations'
     | '/(auth)/login'
     | '/(auth)/register'
-    | '/api/proofs'
-    | '/api/situations'
-    | '/api/thoughts'
     | '/thought/$situation_id'
-    | '/api/auth/$'
     | '/proof/$situation_id/$thought_id'
   fileRoutesById: FileRoutesById
 }
@@ -153,11 +105,7 @@ export interface RootRouteChildren {
   SituationsRoute: typeof SituationsRoute
   authLoginRoute: typeof authLoginRoute
   authRegisterRoute: typeof authRegisterRoute
-  ApiProofsRoute: typeof ApiProofsRoute
-  ApiSituationsRoute: typeof ApiSituationsRoute
-  ApiThoughtsRoute: typeof ApiThoughtsRoute
   ThoughtSituation_idRoute: typeof ThoughtSituation_idRoute
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ProofSituation_idThought_idRoute: typeof ProofSituation_idThought_idRoute
 }
 
@@ -184,27 +132,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ThoughtSituation_idRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/thoughts': {
-      id: '/api/thoughts'
-      path: '/api/thoughts'
-      fullPath: '/api/thoughts'
-      preLoaderRoute: typeof ApiThoughtsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/situations': {
-      id: '/api/situations'
-      path: '/api/situations'
-      fullPath: '/api/situations'
-      preLoaderRoute: typeof ApiSituationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/proofs': {
-      id: '/api/proofs'
-      path: '/api/proofs'
-      fullPath: '/api/proofs'
-      preLoaderRoute: typeof ApiProofsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)/register': {
       id: '/(auth)/register'
       path: '/register'
@@ -226,13 +153,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProofSituation_idThought_idRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -241,11 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   SituationsRoute: SituationsRoute,
   authLoginRoute: authLoginRoute,
   authRegisterRoute: authRegisterRoute,
-  ApiProofsRoute: ApiProofsRoute,
-  ApiSituationsRoute: ApiSituationsRoute,
-  ApiThoughtsRoute: ApiThoughtsRoute,
   ThoughtSituation_idRoute: ThoughtSituation_idRoute,
-  ApiAuthSplatRoute: ApiAuthSplatRoute,
   ProofSituation_idThought_idRoute: ProofSituation_idThought_idRoute,
 }
 export const routeTree = rootRouteImport
