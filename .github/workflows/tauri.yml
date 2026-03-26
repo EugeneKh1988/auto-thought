@@ -11,11 +11,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-22.04, windows-latest]
+        platform: [macos-arm64, macos-x64, ubuntu-22.04, windows-latest]
 
-    runs-on: ${{ matrix.platform }}
+    runs-on: ${{ 
+      matrix.platform == 'macos-arm64' || matrix.platform == 'macos-x64' 
+        ? 'macos-latest' 
+        : matrix.platform 
+    }}
 
     steps:
+      # ------------------------
+      # Checkout
+      # ------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -47,15 +54,17 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
 
-      # 👉 ДОБАВЛЯЕМ ДЛЯ MAC UNIVERSAL
-      - name: Add macOS targets
-        if: matrix.platform == 'macos-latest'
-        run: |
-          rustup target add aarch64-apple-darwin
-          rustup target add x86_64-apple-darwin
+      # Add targets for macOS
+      - name: Add Rust targets for macOS
+        if: matrix.platform == 'macos-arm64'
+        run: rustup target add aarch64-apple-darwin
+
+      - name: Add Rust targets for macOS
+        if: matrix.platform == 'macos-x64'
+        run: rustup target add x86_64-apple-darwin
 
       # ------------------------
-      # Linux deps
+      # Linux dependencies
       # ------------------------
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-22.04'
@@ -75,24 +84,47 @@ jobs:
         run: npm run build
 
       # ------------------------
-      # Build Tauri
+      # Build Tauri app
       # ------------------------
-      # macOS
-      - name: Build Tauri app (macOS universal)
-        if: matrix.platform == 'macos-latest'
-        run: npm run tauri build -- --target universal-apple-darwin
+      - name: Build Tauri (macOS ARM64)
+        if: matrix.platform == 'macos-arm64'
+        run: npm run tauri build -- --target aarch64-apple-darwin
 
-      # остальные
-      - name: Build Tauri app
-        if: matrix.platform != 'macos-latest'
+      - name: Build Tauri (macOS x64)
+        if: matrix.platform == 'macos-x64'
+        run: npm run tauri build -- --target x86_64-apple-darwin
+
+      - name: Build Tauri (Linux/Windows)
+        if: matrix.platform != 'macos-arm64' && matrix.platform != 'macos-x64'
         run: npm run tauri build
 
       # ------------------------
       # Upload artifacts
       # ------------------------
-      - name: Upload artifacts
+      - name: Upload macOS ARM64 artifact
+        if: matrix.platform == 'macos-arm64'
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-build-${{ matrix.platform }}
-          path: |
-            src-tauri/target/release/bundle
+          name: tauri-build-macos-arm64
+          path: src-tauri/target/release/bundle
+
+      - name: Upload macOS x64 artifact
+        if: matrix.platform == 'macos-x64'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-build-macos-x64
+          path: src-tauri/target/release/bundle
+
+      - name: Upload Linux artifact
+        if: matrix.platform == 'ubuntu-22.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-build-linux
+          path: src-tauri/target/release/bundle
+
+      - name: Upload Windows artifact
+        if: matrix.platform == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-build-windows
+          path: src-tauri/target/release/bundle
