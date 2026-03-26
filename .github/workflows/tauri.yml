@@ -13,9 +13,11 @@ jobs:
       matrix:
         include:
           - platform: windows-latest
-            args: ""
+            target: ''
+            args: ''
           - platform: ubuntu-22.04
-            args: ""
+            target: ''
+            args: ''
           - platform: macos-latest
             target: aarch64-apple-darwin
             args: "--target aarch64-apple-darwin"
@@ -26,15 +28,30 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
+      # ------------------------
+      # Checkout repo
+      # ------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ------------------------
+      # Node setup
+      # ------------------------
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm' # Встроенный кеш работает надежнее ручного
+          cache: 'npm'
 
+      # ------------------------
+      # Install frontend deps
+      # ------------------------
+      - name: Install frontend dependencies
+        run: npm install
+
+      # ------------------------
+      # Rust setup
+      # ------------------------
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -43,6 +60,9 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
 
+      # ------------------------
+      # Linux dependencies
+      # ------------------------
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-22.04'
         run: |
@@ -54,21 +74,53 @@ jobs:
             librsvg2-dev \
             patchelf
 
-      - name: Install frontend dependencies
-        run: npm install
+      # ------------------------
+      # Build frontend
+      # ------------------------
+      - name: Build frontend
+        run: npm run build
 
-      - name: Build Tauri
-        # Используем аргументы из матрицы, чтобы не дублировать шаги
+      # ------------------------
+      # Build Tauri
+      # ------------------------
+      - name: Build Tauri app
         run: npm run tauri build -- ${{ matrix.args }}
 
-      - name: Upload artifacts
+      # ------------------------
+      # Upload artifacts per platform
+      # ------------------------
+      # Windows
+      - name: Upload Windows artifacts
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          # Создаем уникальное имя для каждого билда в матрице
-          name: tauri-build-${{ matrix.platform }}-${{ matrix.target || 'default' }}
+          name: tauri-build-windows
           path: |
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/setup.exe
-            src-tauri/target/release/bundle/dmg/*.dmg
+
+      # Linux
+      - name: Upload Linux artifacts
+        if: matrix.platform == 'ubuntu-22.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-build-linux
+          path: |
             src-tauri/target/release/bundle/deb/*.deb
             src-tauri/target/release/bundle/appimage/*.AppImage
+
+      # macOS ARM
+      - name: Upload macOS ARM artifact
+        if: matrix.platform == 'macos-latest' && matrix.target == 'aarch64-apple-darwin'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-build-macos-arm64
+          path: src-tauri/target/release/bundle/dmg/*.dmg
+
+      # macOS x64
+      - name: Upload macOS x64 artifact
+        if: matrix.platform == 'macos-latest' && matrix.target == 'x86_64-apple-darwin'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-build-macos-x64
+          path: src-tauri/target/release/bundle/dmg/*.dmg
