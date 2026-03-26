@@ -19,17 +19,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ------------------------
+      # Node
+      # ------------------------
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Cache Node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      # ------------------------
+      # Rust
+      # ------------------------
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
 
+      # 👉 ДОБАВЛЯЕМ ДЛЯ MAC UNIVERSAL
+      - name: Add macOS targets
+        if: matrix.platform == 'macos-latest'
+        run: |
+          rustup target add aarch64-apple-darwin
+          rustup target add x86_64-apple-darwin
+
+      # ------------------------
+      # Linux deps
+      # ------------------------
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-22.04'
         run: |
@@ -41,23 +68,28 @@ jobs:
             librsvg2-dev \
             patchelf
 
-      - name: Install frontend dependencies
-        run: npm install
-      
-      - name: Cache Node modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-
+      # ------------------------
+      # Build frontend
+      # ------------------------
       - name: Build frontend
         run: npm run build
 
+      # ------------------------
+      # Build Tauri
+      # ------------------------
+      # macOS
+      - name: Build Tauri app (macOS universal)
+        if: matrix.platform == 'macos-latest'
+        run: npm run tauri build -- --target universal-apple-darwin
+
+      # остальные
       - name: Build Tauri app
+        if: matrix.platform != 'macos-latest'
         run: npm run tauri build
 
+      # ------------------------
+      # Upload artifacts
+      # ------------------------
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
