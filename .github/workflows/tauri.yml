@@ -18,10 +18,11 @@ jobs:
           - platform: ubuntu-22.04
             target: ''
             args: ''
-          - platform: macos-latest
+          - platform: macos-latest   # ARM
             target: aarch64-apple-darwin
             args: "--target aarch64-apple-darwin"
-          - platform: macos-latest
+
+          - platform: macos-13       # Intel
             target: x86_64-apple-darwin
             args: "--target x86_64-apple-darwin"
 
